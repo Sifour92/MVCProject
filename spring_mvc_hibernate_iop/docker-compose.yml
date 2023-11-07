@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+  client-backend:
+    image: client:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-db
+    environment:
+      - SERVER_PORT= 8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/employee
+
+  service-db:
+    image: postgres:14.7-alpine
+    environment:
+      POSTGRES_USER: tandraym
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./initDB.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./populateDB.sql:/docker-entrypoint-populatedb.d/init.sql
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  db-data:
+
+#
+#
+#version: '3.5'
+#services:
+#  webapp:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      database:
+#        condition: service_healthy
+#    environment:
+#      - SERVER_PORT= 8080
+#      - SPRING_DATASOURCE_URL: jdbc:postgresql://database/employee
+#
+#  database:
+#    image: postgres:latest
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready", "--quiet"]
+#      interval: 1s
+#      timeout: 5s
+#      retries: 10
+#    environment:
+#      POSTGRES_USER: tandraym
+#      POSTGRES_PASSWORD: 123
+#    ports:
+#      - "15432:5432"
+#    volumes:
+#      - ./initDB.sql:/docker-entrypoint-initdb.d/init.sql
+#      - ./populateDB.sql:/docker-entrypoint-populatedb.d/init.sql

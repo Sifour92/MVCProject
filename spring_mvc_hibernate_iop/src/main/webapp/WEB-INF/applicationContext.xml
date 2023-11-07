@@ -22,7 +22,6 @@
 
 
     <context:component-scan base-package="com"/>
-
     <mvc:annotation-driven/>
     <aop:aspectj-autoproxy/>
 
@@ -35,9 +34,10 @@
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
           destroy-method="close">
         <property name="driverClass" value="org.postgresql.Driver"/>
-        <property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/tandraym"/>
+<!--        <property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/tandraym"/>-->
+        <property name="jdbcUrl" value="jdbc:postgresql://localhost:15432/tandraym"/>
         <property name="user" value="tandraym"/>
-        <property name="password" value="86715352"/>
+        <property name="password" value="123"/>
     </bean>
 
     <bean id="sessionFactory"
