@@ -10,24 +10,37 @@ services:
     depends_on:
       - service-db
     environment:
-      - SERVER_PORT= 8080
+      - SERVER_PORT=8080
       - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/employee
+    networks:
+      - appnet
+      - internet
 
   service-db:
     image: postgres:14.7-alpine
     environment:
+      POSTGRES_DB: employee
       POSTGRES_USER: tandraym
       POSTGRES_PASSWORD: 123
     ports:
       - "15432:5432"
     volumes:
-      - ./initDB.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./populateDB.sql:/docker-entrypoint-populatedb.d/init.sql
+      - ./create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - ./initDB.sql:/docker-entrypoint-initdb.d/initDB.sql
+      - ./populateDB.sql:/docker-entrypoint-initdb.d/populateDB.sql
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - appnet
 
 volumes:
   db-data:
+
+networks:
+  internet:
+    driver: bridge
+  appnet:
+    driver: bridge
 
 #
 #
@@ -50,6 +63,17 @@ volumes:
 #    image: postgres:latest
 #    healthcheck:
 #      test: ["CMD-SHELL", "pg_isready", "--quiet"]
+
+
+#  After struggling for a while, I found that this test command worked for me.
+#
+#test: [ "CMD", "pg_isready", "-q", "-d", "{YOUR_DATABASE_NAME}", "-U", "{YOUR_DATABASE_USERNAME}" ]
+#
+#  for me, I had to add the literal username and db name for it to work
+#
+#test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+#
+#  got it from here.
 #      interval: 1s
 #      timeout: 5s
 #      retries: 10
