@@ -12,3 +12,5 @@ In root project directori writre command
 `docker-compose up (-d)` 
 
 -d detache mod
+
+then go to the browser and go to localhost:8080
