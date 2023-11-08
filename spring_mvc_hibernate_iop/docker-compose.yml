@@ -19,15 +19,12 @@ services:
   service-db:
     image: postgres:14.7-alpine
     environment:
-      POSTGRES_DB: employee
       POSTGRES_USER: tandraym
       POSTGRES_PASSWORD: 123
     ports:
       - "15432:5432"
     volumes:
       - ./create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
-      - ./initDB.sql:/docker-entrypoint-initdb.d/initDB.sql
-      - ./populateDB.sql:/docker-entrypoint-initdb.d/populateDB.sql
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
